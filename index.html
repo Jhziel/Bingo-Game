@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bingo Game</title>
+</head>
+<body>
+  <h1>Bingo Game</h1>
+  <div id="bingo-cards"></div>
+  <button onclick="generateBingoCards()">Generate Bingo Cards</button>
+  <button onclick="clearBingoCards()">Clear Bingo Cards</button>
+  <button onclick="drawBall()">Draw Ball</button>
+  <div id="drawn-number"></div>
+
+  <script>
+    let bingoCards = [];
+
+    function generateBingoCards() {
+      let numCards = prompt("Enter number of Bingo cards to generate:");
+      bingoCards = [];
+      for (let i = 0; i < numCards; i++) {
+        let card = new BingoCard();
+        card.generateMatrix();
+        bingoCards.push(card);
+      }
+      displayBingoCards();
+    }
+
+    function displayBingoCards() {
+      let container = document.getElementById('bingo-cards');
+      container.innerHTML = '';
+      bingoCards.forEach((card, index) => {
+        container.innerHTML += `<div><h3>Card ${index + 1}</h3>${card.drawCard()}</div>`;
+      });
+    }
+
+    function clearBingoCards() {
+      bingoCards = [];
+      document.getElementById('bingo-cards').innerHTML = '';
+    }
+
+    function drawBall() {
+      let ballDraw = new BallDraw();
+      let drawnNumber = ballDraw.drawBall();
+      document.getElementById('drawn-number').innerHTML = `<p>Drawn Number: ${drawnNumber}</p>`;
+      bingoCards.forEach(card => {
+        if (ballDraw.markCard(card)) {
+          displayBingoCards();
+        }
+      });
+    }
+  </script>
+  <script src="BallDraw.js"></script>
+  <script src="BingoCard.js"></script>
+</body>
+</html>
